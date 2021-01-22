@@ -1,0 +1,10 @@
+class Wagon
+  
+  attr_reader :number,
+              :type_wagon
+
+  def initialize(number, type_of_wagon)
+    @number = number
+    @type_wagon = type_of_wagon
+  end
+end

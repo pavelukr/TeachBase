@@ -1,0 +1,7 @@
+class CargoTrain < Train
+  def add_wagon(wagon)
+    if wagon.type == 'cargo'
+      wagons << wagon
+    end
+  end
+end
