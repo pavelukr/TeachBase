@@ -2,24 +2,27 @@ class Train
 
   attr_accessor :speed,
                 :temporary_station,
-                :route
-  attr_reader :number,
-              :wagons
+                :route,
+                :wagons
+  attr_reader :number
 
   def initialize(number)
     @number = number
     @wagons = []
+    @speed = 0
   end
 
   def train_stop
     @speed = 0
   end
 
-  def delete_wagon(wagon)
-    unless speed.zero?
-      wagons.delete(wagon)
+  def delete_wagon
+    if (wagons.length - 1) >= 0
+      wagons.delete_at(wagons.length - 1) unless speed.zero?
     end
   end
+
+  def add_wagon; end
 
   def showing_route
     puts "The previous station is #{
@@ -32,9 +35,4 @@ The next station is #{
         @route.stations[@route.stations.find_index(temporary_station) + 1].name
       end}"
   end
-
-  protected
-
-  attr_writer :number,
-              :wagons
 end
