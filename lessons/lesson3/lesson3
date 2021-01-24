@@ -7,7 +7,7 @@ class Station
     @list_of_trains = []
   end
 
-  def get_train(train)
+  def get_in_train(train)
     @list_of_trains << train
   end
 
@@ -71,7 +71,7 @@ class Train
                 :amount_of_vagons,
                 :speed,
                 :temporary_station,
-                :route
+                :'route.rb'
 
   def initialize(number, type, amount_of_vagons)
     @number = number
