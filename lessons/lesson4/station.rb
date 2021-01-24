@@ -9,12 +9,12 @@ class Station
     @list_of_trains = []
   end
 
-  def get_train(train)
+  def get_in_train(train)
     @list_of_trains << train
   end
 
   def show_all_trains
-    print 'These trains are on station now: '
+    puts 'These trains are on the station now: '
     list_of_trains.each { |train| print " #{train.number}; " }
     puts "\n"
   end
