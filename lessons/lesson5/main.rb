@@ -126,4 +126,10 @@ route.add_station(station2)
 route.add_station(station3)
 route.add_station(station4)
 
-user_input(route)
+#user_input(route)
+
+train1 = Train.new('1')
+train2 = Train.new('2')
+train3 = Train.new('3')
+
+

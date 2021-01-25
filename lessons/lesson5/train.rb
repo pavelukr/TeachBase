@@ -1,4 +1,9 @@
+require_relative 'manufacturer'
+require_relative 'instance_counter'
+
 class Train
+  include Manufacturer
+  include InstanceCounter
 
   attr_accessor :speed,
                 :temporary_station,
@@ -10,6 +15,7 @@ class Train
     @number = number
     @railway_carriages = []
     @speed = 0
+    register_instance
   end
 
   def train_stop
@@ -40,5 +46,13 @@ class Train
     show_previous_station
     puts "The temporary station is #{temporary_station.name}"
     show_next_station
+  end
+
+  def find(number)
+    train = nil
+    ObjectSpace
+      .each_object(Train)
+      .each { |value| train = value if value.number == number }
+    train
   end
 end

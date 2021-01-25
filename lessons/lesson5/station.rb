@@ -1,5 +1,4 @@
 class Station
-
   attr_reader :name
 
   attr_accessor :list_of_trains
@@ -42,5 +41,11 @@ class Station
     passenger = 0
     count_type(cargo, passenger)
     puts "On the station you have #{cargo} type cargo of wagons and #{passenger} type passenger of wagons"
+  end
+
+  def all
+    ObjectSpace
+      .each_object(Station)
+      .each { |s| p s }
   end
 end

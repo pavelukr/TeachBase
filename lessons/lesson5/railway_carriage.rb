@@ -1,5 +1,6 @@
 class RailwayCarriage
-  
+  extend Manufacturer
+
   attr_reader :type
 
   def initialize(type)
