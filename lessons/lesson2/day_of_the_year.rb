@@ -1,17 +1,31 @@
-def day_year(day, month, year)
+def months_count_for_leap_year(month)
   days = 0
-  if (year % 4).zero?
-    months = year_leap
-    (1..month - 1).each do |i|
-      days += months[i.to_s]
-    end
-  else
-    months = year_non_leap
-    (1..month - 1).each do |i|
-      days += months[i.to_s]
-    end
+  months = year_leap
+  (1..month - 1).each do |i|
+    days += months[i.to_s]
   end
-  days_month = days
+  days
+end
+
+def months_count_for_non_leap_year(month)
+  days = 0
+  months = year_non_leap
+  (1..month - 1).each do |i|
+    days += months[i.to_s]
+  end
+  days
+end
+
+def sum_of_days(month, year)
+  if (year % 4).zero?
+    months_count_for_leap_year(month)
+  else
+    months_count_for_non_leap_year(month)
+  end
+end
+
+def day_year(day, month, year)
+  days_month = sum_of_days(month, year)
   puts "#{days_month + day} is your number in current year"
 end
 

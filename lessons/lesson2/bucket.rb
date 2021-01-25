@@ -7,21 +7,36 @@
 # Также вывести итоговую сумму за каждый товар.
 # Вычислить и вывести на экран итоговую сумму всех покупок в "корзине".
 
-def input_products()
-  $bucket_list = Hash.new(0)
+def enter_name
+  puts 'Input name of the product: '
+  name = gets.chomp
+end
+
+def enter_price
+  puts 'Input price for one amount of this product: '
+  gets.chomp.to_i
+end
+
+def enter_quantity
+  puts 'Input quantity of this product'
+  gets.chomp.to_f
+end
+
+def stop_input
+  puts "If you want to stop inputting, type 'stop': "
+  gets.chomp
+end
+
+def input_products
+  bucket_list = Hash.new(0)
   loop do
-    puts 'Input name of the product: '
-    name = gets.chomp
-    puts 'Input price for one amount of this product: '
-    price = gets.chomp.to_i
-    puts 'Input quantity of this product'
-    quantity = gets.chomp.to_f
-    $bucket_list[name] = { price => quantity }
-    puts "If you want to stop inputting, type 'stop': "
-    input = gets.chomp
-    break if input == 'stop'
+    name = enter_name
+    price = enter_price
+    quantity = enter_quantity
+    bucket_list[name] = { price => quantity }
+    break if stop_input == 'stop'
   end
-  $bucket_list
+  bucket_list
 end
 
 def show_bucket(bucket)
