@@ -24,9 +24,7 @@ class Station
     list_of_trains.delete(train)
   end
 
-  def count_trains
-    cargo = 0
-    passenger = 0
+  def count_type(cargo, passenger)
     list_of_trains.each do |train|
       case train.class
       when 'CargoTrain'
@@ -37,6 +35,12 @@ class Station
         puts 'Something went wrong'
       end
     end
+  end
+
+  def count_trains
+    cargo = 0
+    passenger = 0
+    count_type(cargo, passenger)
     puts "On the station you have #{cargo} type cargo of wagons and #{passenger} type passenger of wagons"
   end
 end

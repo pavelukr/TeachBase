@@ -1,7 +1,7 @@
 require_relative 'train'
 
 class CargoTrain < Train
-  def add_wagon(wagon)
-    @wagons << wagon if wagon.type == 1
+  def add_wagon(railway_carriage)
+    @railway_carriages << railway_carriage if railway_carriage.type == 1
   end
 end

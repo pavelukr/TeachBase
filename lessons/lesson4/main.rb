@@ -2,7 +2,7 @@ require_relative 'route'
 require_relative 'station'
 require_relative 'cargo_train'
 require_relative 'passenger_train'
-require_relative 'wagon'
+require_relative 'railway_carriage'
 
 def list_choice
   puts "You have to choose operation:\n
@@ -14,11 +14,19 @@ Input '5.' if you want to see list of stations and list of trains on stations\n
 Input '0.' if you want to stop\n"
 end
 
-def create_train(route)
+def type_input
   puts "Choose the type of train, select '1' for cargo, '2' for passenger type"
-  type = gets.chomp.to_i
+  gets.chomp.to_i
+end
+
+def number_input
   puts 'Input number of train here: '
-  number = gets.chomp
+  gets.chomp
+end
+
+def create_train(route)
+  type = type_input
+  number = number_input
   case type
   when 1
     train = CargoTrain.new(number)
@@ -29,18 +37,22 @@ def create_train(route)
   train
 end
 
-def add_wagon_to_train(arrays_of_train)
+def get_train_position(array_of_train)
   puts 'Select the train to which one you want to add wagon: '
-  arrays_of_train.each do |value|
-    puts "Input: #{arrays_of_train.find_index(value)}
+  array_of_train.each do |value|
+    puts "Input: #{array_of_train.find_index(value)}
  for #{value.number} type: #{value.class}"
   end
-  train_position = gets.chomp.to_i
-  case arrays_of_train[train_position].class
+  gets.chomp.to_i
+end
+
+def add_wagon_to_train(array_of_train)
+  train_position = get_train_position(array_of_train)
+  case array_of_train[train_position].class
   when 'CargoTrain'
-    arrays_of_train[train_position].add_wagon(Wagon.new(1))
+    array_of_train[train_position].add_wagon(RailwayCarriage.new(1))
   when 'PassengerTrain'
-    arrays_of_train[train_position].add_wagon(Wagon.new(2))
+    array_of_train[train_position].add_wagon(RailwayCarriage.new(2))
   end
 end
 
@@ -54,19 +66,27 @@ def delete_wagon(arrays_of_train)
   arrays_of_train[train_position].delete_wagon
 end
 
-def add_train_to_station(route, arrays_of_train)
+def getting_station_position(route)
   puts 'Select the station to which one you want to add the train: '
   route.stations.each do |value|
     puts "Input: #{route.stations.find_index(value)}
  for #{value.name}"
   end
-  station_position = gets.chomp.to_i
+  gets.chomp.to_i
+end
+
+def get_train_position_for_station(route, array_of_train, station_position)
   puts "Select the train which one you want to add to the #{route.stations[station_position].name}:"
-  arrays_of_train.each do |value|
-    puts "Input: #{arrays_of_train.find_index(value)}
+  array_of_train.each do |value|
+    puts "Input: #{array_of_train.find_index(value)}
  for #{value.number} type: #{value.class}"
   end
-  train_position = gets.chomp.to_i
+  gets.chomp.to_i
+end
+
+def add_train_to_station(route, arrays_of_train)
+  station_position = getting_station_position(route)
+  train_position = get_train_position_for_station(route, arrays_of_train, station_position)
   route.stations[station_position].get_in_train(arrays_of_train[train_position])
   arrays_of_train[train_position].temporary_station = route.stations[station_position]
 end
