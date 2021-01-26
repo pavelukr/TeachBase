@@ -54,8 +54,7 @@ def number_input
   gets.chomp
 end
 
-def type_of_train(number)
-  type = type_input
+def case_type(type, number)
   case type
   when 1
     train = CargoTrain.new(number)
@@ -65,13 +64,19 @@ def type_of_train(number)
   train
 end
 
+def type_of_train(number)
+  type = type_input
+  case_type(type, number)
+end
+
 def check_for_existing_train(train, array_of_trains)
   checker = true
   array_of_trains.each do |value|
-    checker = false if value.number == train.number
+    checker = false if !train.nil? && !value.nil? && (value.number == train.number)
   end
   if checker
     array_of_trains << train
+    puts "You created train by number #{train.number} and its type is #{train.class}"
   else
     puts "You can't create train with the same number"
   end
@@ -80,8 +85,12 @@ end
 def create_train(array_of_trains)
   loop do
     number = number_input
-    train = type_of_train(number)
-    check_for_existing_train(train, array_of_trains)
+    begin
+      train = type_of_train(number)
+      check_for_existing_train(train, array_of_trains)
+    rescue RuntimeError
+      puts 'You entered wrong number format. Try again'
+    end
     puts "If you want to continue creating trains input '+', otherwise the process will stop"
     break if gets.chomp != '+'
   end

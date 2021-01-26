@@ -4,6 +4,11 @@ require_relative 'instance_counter'
 class Train
   include Manufacturer
   include InstanceCounter
+  #Релизовать проверку на формат номера поезда.
+  # Допустимый формат: три буквы или цифры в любом порядке,
+  # необязательный дефис (может быть, а может нет) и еще 2 буквы или цифры после дефиса.
+
+  NUMBER_FORMAT = /[a-z]{3}|\d{3}-?([a-z]{2}|\d{2})/i.freeze
 
   attr_accessor :speed,
                 :temporary_station,
@@ -16,10 +21,17 @@ class Train
     @railway_carriages = []
     @speed = 0
     register_instance
+    validate!
   end
 
   def train_stop
     @speed = 0
+  end
+
+  def valid?
+    validate!
+  rescue RuntimeError
+    false
   end
 
   def delete_wagon
@@ -63,4 +75,11 @@ class Train
       .each { |value| train = value if value.number == number }
     train
   end
+
+  protected
+
+  def validate!
+    raise 'Incorrect format of your number. Try again' if number !~ NUMBER_FORMAT
+  end
+
 end

@@ -4,6 +4,8 @@ class Station
 
   attr_accessor :list_of_trains
 
+  NAME_FORMAT = /[a-z]{3}|\d{3}-?([a-z]{2}|\d{2})/i.freeze
+
   def initialize(name)
     @name = name
     @list_of_trains = []
@@ -28,7 +30,6 @@ class Station
   end
 
   def setting_up_train(train)
-    puts "Setting up the train #{train.number}"
     list_of_trains.delete(train)
   end
 
@@ -49,6 +50,12 @@ class Station
     cargo = 0
     passenger = 0
     count_type(cargo, passenger)
-    puts "On the station you have #{cargo} type cargo of wagons and #{passenger} type passenger of wagons"
+    "On the station you have #{cargo} type cargo of wagons and #{passenger} type passenger of wagons"
+  end
+
+  protected
+
+  def validate!
+    raise 'Incorrect format of your station name. Try again' if name !~ NAME_FORMAT
   end
 end
