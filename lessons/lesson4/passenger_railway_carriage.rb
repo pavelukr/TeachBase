@@ -1,0 +1,3 @@
+class PassengerRailwayCarriage
+
+end

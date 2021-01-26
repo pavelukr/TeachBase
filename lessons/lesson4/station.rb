@@ -10,7 +10,15 @@ class Station
   end
 
   def get_in_train(train)
-    @list_of_trains << train
+    have_or_not = true
+    list_of_trains.each do |value|
+      have_or_not = false if value.number == train.number
+    end
+    if have_or_not
+      @list_of_trains << train
+    else
+      puts "You can't add the same train to station twice"
+    end
   end
 
   def show_all_trains

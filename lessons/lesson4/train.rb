@@ -1,8 +1,8 @@
+require_relative 'route'
 class Train
 
   attr_accessor :speed,
                 :temporary_station,
-                :route,
                 :railway_carriages
   attr_reader :number
 
@@ -17,7 +17,11 @@ class Train
   end
 
   def delete_wagon
-    railway_carriages.delete_at(railway_carriages.length - 1) if (railway_carriages.length - 1) >= 0 && !speed.zero?
+    if (railway_carriages.length - 1) >= 0 && !speed.zero?
+      railway_carriages.delete_at(railway_carriages.length - 1)
+    else
+      puts "You can't delete a railway carriage cause your train doesn't have one"
+    end
   end
 
   def add_wagon; end
@@ -27,6 +31,10 @@ class Train
       if @route.stations.find_index(temporary_station) != 0
         @route.stations[route.stations.find_index(temporary_station) - 1].name
       end}"
+  end
+
+  def add_route(route)
+    self.route = route if route.instance_of?(Route)
   end
 
   def show_next_station
@@ -41,4 +49,8 @@ class Train
     puts "The temporary station is #{temporary_station.name}"
     show_next_station
   end
+
+  protected
+
+  attr_accessor :route
 end
