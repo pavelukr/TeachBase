@@ -4,13 +4,13 @@ class Route
 
   public
 
-  def initialize(begin_of_route, end_of_route)
+  def initialize(begin_of_route = '', end_of_route = '')
     @stations = [begin_of_route, end_of_route]
     @counter = 1
   end
 
   def add_station(station)
-    stations.insert(counter, station)
+    @stations.insert(counter, station)
     @counter += 1
   end
 

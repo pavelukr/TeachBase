@@ -23,7 +23,11 @@ class Train
   end
 
   def delete_wagon
-    railway_carriages.delete_at(railway_carriages.length - 1) if (railway_carriages.length - 1) >= 0 && !speed.zero?
+    if (railway_carriages.length - 1) >= 0 && !speed.zero?
+      railway_carriages.delete_at(railway_carriages.length - 1)
+    else
+      puts "You can't delete a railway carriage cause your train doesn't have one"
+    end
   end
 
   def add_wagon; end
@@ -46,6 +50,10 @@ class Train
     show_previous_station
     puts "The temporary station is #{temporary_station.name}"
     show_next_station
+  end
+
+  def add_route(route)
+    self.route = route if route.instance_of?(Route)
   end
 
   def find(number)

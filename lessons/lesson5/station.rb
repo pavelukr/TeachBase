@@ -1,4 +1,5 @@
 class Station
+
   attr_reader :name
 
   attr_accessor :list_of_trains
@@ -9,7 +10,15 @@ class Station
   end
 
   def get_in_train(train)
-    @list_of_trains << train
+    have_or_not = true
+    list_of_trains.each do |value|
+      have_or_not = false if value.number == train.number
+    end
+    if have_or_not
+      @list_of_trains << train
+    else
+      puts "You can't add the same train to station twice"
+    end
   end
 
   def show_all_trains
@@ -41,11 +50,5 @@ class Station
     passenger = 0
     count_type(cargo, passenger)
     puts "On the station you have #{cargo} type cargo of wagons and #{passenger} type passenger of wagons"
-  end
-
-  def all
-    ObjectSpace
-      .each_object(Station)
-      .each { |s| p s }
   end
 end
