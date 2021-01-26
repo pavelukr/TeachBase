@@ -2,8 +2,6 @@ class Route
   attr_accessor :stations,
                 :counter
 
-  public
-
   def initialize(begin_of_route = '', end_of_route = '')
     @stations = [begin_of_route, end_of_route]
     @counter = 1

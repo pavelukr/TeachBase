@@ -4,11 +4,18 @@ class Station
 
   attr_accessor :list_of_trains
 
-  NAME_FORMAT = /[a-z]{3}|\d{3}-?([a-z]{2}|\d{2})/i.freeze
+  NAME_FORMAT = /[a-z]|\d|\s/i.freeze
 
   def initialize(name)
     @name = name
     @list_of_trains = []
+    validate!
+  end
+
+  def valid?
+    validate!
+  rescue RuntimeError
+    false
   end
 
   def get_in_train(train)

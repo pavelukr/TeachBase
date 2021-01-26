@@ -37,8 +37,12 @@ end
 
 def add_station_to_array(array_of_stations)
   loop do
-    station = create_station
-    check_for_existing_station(station, array_of_stations)
+    begin
+      check_for_existing_station(station = create_station, array_of_stations)
+      puts "You created station by name #{station.name}"
+    rescue RuntimeError
+      puts 'You entered wrong name format for your station. Try again'
+    end
     puts "If you want to continue creating stations input '+', otherwise the process will stop"
     break if gets.chomp != '+'
   end
@@ -86,10 +90,9 @@ def create_train(array_of_trains)
   loop do
     number = number_input
     begin
-      train = type_of_train(number)
-      check_for_existing_train(train, array_of_trains)
+      check_for_existing_train(type_of_train(number), array_of_trains)
     rescue RuntimeError
-      puts 'You entered wrong number format. Try again'
+      puts 'You entered wrong number format for your train. Try again'
     end
     puts "If you want to continue creating trains input '+', otherwise the process will stop"
     break if gets.chomp != '+'
@@ -152,7 +155,7 @@ def variants_for_add_route(array_of_stations, route)
     next unless find_station(station, route)
 
     puts "Input #{array_of_stations.find_index(station)}
-    for station #{station.name}"
+for station #{station.name}"
     station_empty += 1
   end
   puts 'Add more stations to your list' if station_empty.zero?
