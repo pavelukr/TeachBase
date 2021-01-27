@@ -4,9 +4,6 @@ require_relative 'instance_counter'
 class Train
   include Manufacturer
   include InstanceCounter
-  #Релизовать проверку на формат номера поезда.
-  # Допустимый формат: три буквы или цифры в любом порядке,
-  # необязательный дефис (может быть, а может нет) и еще 2 буквы или цифры после дефиса.
 
   NUMBER_FORMAT = /[a-z]{3}|\d{3}-?([a-z]{2}|\d{2})/i.freeze
 
@@ -74,6 +71,12 @@ class Train
       .each_object(Train)
       .each { |value| train = value if value.number == number }
     train
+  end
+
+  def show_carriage_info(&block)
+    railway_carriages.each do |carriage|
+      block.call(carriage)
+    end
   end
 
   protected

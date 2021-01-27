@@ -17,11 +17,4 @@ class Route
     @counter -= 1
   end
 
-  def show_stations
-    puts 'The list of stations on the route: '
-    stations.each do |station|
-      puts " -> #{station.name} #{station.show_all_trains}"
-    end
-    puts "\n"
-  end
 end

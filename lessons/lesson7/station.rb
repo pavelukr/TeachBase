@@ -30,11 +30,11 @@ class Station
     end
   end
 
-  def show_all_trains
-    puts 'These trains are on the station now: '
-    list_of_trains.each { |train| print " #{train.number}; " }
-    puts "\n"
-  end
+#   def show_all_trains
+#     puts 'These trains are on the station now: '
+#     list_of_trains.each { |train| print " #{train.number}; " }
+#     puts "\n"
+#   end
 
   def setting_up_train(train)
     list_of_trains.delete(train)
@@ -50,6 +50,12 @@ class Station
       else
         puts 'Something went wrong'
       end
+    end
+  end
+
+  def show_trains(&block)
+    list_of_trains.each do |train|
+      block.call(train)
     end
   end
 
