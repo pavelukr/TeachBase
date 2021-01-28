@@ -1,5 +1,4 @@
 class PassengerRailwayCarriage
-
   attr_reader :number_of_taken_seats
 
   def initialize(number_of_seats)
@@ -20,5 +19,4 @@ class PassengerRailwayCarriage
   attr_accessor :number_of_seats
 
   attr_writer :number_of_taken_seats
-
 end

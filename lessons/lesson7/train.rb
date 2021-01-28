@@ -84,5 +84,4 @@ class Train
   def validate!
     raise 'Incorrect format of your number. Try again' if number !~ NUMBER_FORMAT
   end
-
 end

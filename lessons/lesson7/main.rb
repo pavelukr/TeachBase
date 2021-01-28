@@ -36,6 +36,12 @@ def check_for_existing_station(station, array_of_stations)
   end
 end
 
+def show_instruction_for_stop(string)
+  puts '--------------------------------------------------------'
+  puts "If you want to continue #{string} input '+'.
+Otherwise the process will stop"
+end
+
 def add_station_to_array(array_of_stations)
   loop do
     begin
@@ -44,13 +50,14 @@ def add_station_to_array(array_of_stations)
     rescue RuntimeError
       puts 'You entered wrong name format for your station. Try again'
     end
-    puts "If you want to continue creating stations input '+', otherwise the process will stop"
+    show_instruction_for_stop('creating stations')
     break if gets.chomp != '+'
   end
 end
 
 def type_input
-  puts "Choose the type of train, select '1' for cargo, '2' for passenger type"
+  puts "Choose the type of train: enter '1' for cargo,
+'2' for passenger type"
   gets.chomp.to_i
 end
 
@@ -74,17 +81,22 @@ def type_of_train(number)
   case_type(type, number)
 end
 
-def check_for_existing_train(train, array_of_trains)
-  checker = true
-  array_of_trains.each do |value|
-    checker = false if !train.nil? && !value.nil? && (value.number == train.number)
-  end
+def if_for_check(train, checker, array_of_trains)
   if checker
     array_of_trains << train
     puts "You created train by number #{train.number} and its type is #{train.class}"
   else
     puts "You can't create train with the same number"
   end
+end
+
+def check_for_existing_train(train, array_of_trains)
+  checker = true
+  array_of_trains.each do |value|
+    checker = false if !train.nil? && !value.nil? &&
+                       (value.number == train.number)
+  end
+  if_for_check(train, checker, array_of_trains)
 end
 
 def create_train(array_of_trains)
@@ -95,7 +107,7 @@ def create_train(array_of_trains)
     rescue RuntimeError
       puts 'You entered wrong number format for your train. Try again'
     end
-    puts "If you want to continue creating trains input '+', otherwise the process will stop"
+    show_instruction_for_stop('creating trains')
     break if gets.chomp != '+'
   end
 end
@@ -122,14 +134,15 @@ end
 
 def show_instructions_create_route
   puts "If you want to create a route,
-you should choose at least two stations for begin and end (they should be different!)"
+you should choose at least two stations:
+for begin and end (they should be different!)"
 end
 
 def object_of_route(array_of_stations, route)
-  begin_position = begin_position_create_route(array_of_stations)
-  end_position = end_position_create_route(begin_position, array_of_stations)
-  route.stations[0] = array_of_stations[begin_position.to_i]
-  route.stations[1] = array_of_stations[end_position.to_i]
+  begin_pos = begin_position_create_route(array_of_stations)
+  end_pos = end_position_create_route(begin_pos, array_of_stations)
+  route.stations[0] = array_of_stations[begin_pos.to_i]
+  route.stations[1] = array_of_stations[end_pos.to_i]
 end
 
 def create_route(array_of_stations, route)
@@ -164,11 +177,12 @@ end
 
 def add_station_to_route(array_of_stations, route)
   loop do
-    puts "You don't have enough stations, create more"; break if variants_for_add_route(array_of_stations, route)
-
-    index_station = gets.chomp
-    route.add_station(array_of_stations[index_station.to_i])
-    puts "If you want to continue adding station to route input '+' otherwise entering will stop"
+    if variants_for_add_route(array_of_stations, route)
+      puts "You don't have enough stations, create more"
+      break
+    end
+    route.add_station(array_of_stations[gets.chomp.to_i])
+    show_instruction_for_stop('adding stations to route')
     enter_variable = gets.chomp
     break if enter_variable != '+'
   end
@@ -212,24 +226,26 @@ def type_of_carriage_for_add(array_of_trains, train_position)
   end
 end
 
-def add_wagon_to_train(array_of_trains)
+def add_carriage_to_train(array_of_trains)
   loop do
-    train_position = get_train_position(array_of_trains) { puts 'Select the train to which one you want to add wagon:' }
+    train_position = get_train_position(array_of_trains) do
+      puts 'Select the train to which one you want to add carriage:'
+    end
     type_of_carriage_for_add(array_of_trains, train_position)
-    puts "If you want to continue adding carriages to trains input '+' otherwise entering will stop"
+    show_instruction_for_stop('adding carriages to trains')
     enter_variable = gets.chomp
     break if enter_variable != '+'
   end
 end
 
-def delete_wagon(arrays_of_train)
-  puts 'Select the train in which one you want to delete a wagon: '
+def delete_carriage(arrays_of_train)
+  puts 'Select the train in which one you want to delete a carriage: '
   arrays_of_train.each do |value|
     puts "Input: #{arrays_of_train.find_index(value)}
  for train's number #{value.number} type: #{value.class}"
   end
   train_position = gets.chomp.to_i
-  arrays_of_train[train_position].delete_wagon
+  arrays_of_train[train_position].delete_carriage
 end
 
 def getting_station_position(route)
@@ -242,7 +258,8 @@ def getting_station_position(route)
 end
 
 def get_train_position_for_station(route, array_of_train, station_position)
-  puts "Select the train which one you want to add to the #{route.stations[station_position].name}:"
+  puts "Select the train which one you want to add to the
+station #{route.stations[station_position].name}:"
   array_of_train.each do |value|
     puts "Input: #{array_of_train.find_index(value)}
  for train's number #{value.number} type: #{value.class}"
@@ -251,14 +268,14 @@ def get_train_position_for_station(route, array_of_train, station_position)
 end
 
 def add_train_to_station(route, arrays_of_train)
-  station_position = getting_station_position(route)
-  train_position = get_train_position_for_station(route, arrays_of_train, station_position)
-  if arrays_of_train[train_position].temporary_station == nil
-    route.stations[station_position].get_in_train(arrays_of_train[train_position])
-    arrays_of_train[train_position].temporary_station = route.stations[station_position]
+  station_pos = getting_station_position(route)
+  train_pos = get_train_position_for_station(route, arrays_of_train, station_pos)
+  if arrays_of_train[train_pos].temporary_station == nil
+    route.stations[station_pos].get_in_train(arrays_of_train[train_pos])
+    arrays_of_train[train_pos].temporary_station = route.stations[station_pos]
   else
     puts "You can't place this train, because it's
-already on another station #{route.stations[station_position].name}"
+already on another station #{route.stations[station_pos].name}"
   end
 end
 
@@ -324,18 +341,22 @@ end
 def case_cargo_carriage(array_of_trains, train_position, carriage_position)
   puts 'This is cargo train, so you can take up volume in selected carriage'
   puts "Input amount of volume, which you want to occupy,
- but it should be less than #{array_of_trains[train_position].railway_carriages[carriage_position].left_volume}"
-  array_of_trains[train_position].railway_carriages[carriage_position].to_occupy_volume(gets.chomp.to_f)
+ but it should be less than #{array_of_trains[train_position]
+                                        .railway_carriages[carriage_position].left_volume}"
+  array_of_trains[train_position]
+    .railway_carriages[carriage_position].to_occupy_volume(gets.chomp.to_f)
 end
 
 def take_seat_or_volume(array_of_trains)
-  train_position = get_train_position(array_of_trains) { puts 'Select train, in which one you want to make changes' }
-  carriage_position = select_carriage_for_taking(array_of_trains[train_position])
-  class_of_carriage = array_of_trains[train_position].railway_carriages[carriage_position].class
-  if class_of_carriage == PassengerRailwayCarriage
-    case_passenger_carriage(array_of_trains, train_position, carriage_position)
+  train_pos = get_train_position(array_of_trains) do
+    puts 'Select train, in which one you want to make changes'
+  end
+  carriage_pos = select_carriage_for_taking(array_of_trains[train_pos])
+  class_of_carr = array_of_trains[train_pos].railway_carriages[carriage_pos].class
+  if class_of_carr == PassengerRailwayCarriage
+    case_passenger_carriage(array_of_trains, train_pos, carriage_pos)
   else
-    case_cargo_carriage(array_of_trains, train_position, carriage_position)
+    case_cargo_carriage(array_of_trains, train_pos, carriage_pos)
   end
 end
 
@@ -350,9 +371,9 @@ def all_cases(array_of_stations, array_of_trains, route, choice)
   when '4'
     create_train(array_of_trains)
   when '5'
-    add_wagon_to_train(array_of_trains)
+    add_carriage_to_train(array_of_trains)
   when '6'
-    delete_wagon(array_of_trains)
+    delete_carriage(array_of_trains)
   when '7'
     add_train_to_station(route, array_of_trains)
   when '8'
@@ -365,7 +386,7 @@ def all_cases(array_of_stations, array_of_trains, route, choice)
 end
 
 def enter_variable_for_user_input
-  puts "If you want to continue work with program '+', otherwise the process will stop"
+  show_instruction_for_stop('work with program')
   gets.chomp
 end
 

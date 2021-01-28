@@ -1,5 +1,4 @@
 class Station
-
   attr_reader :name
 
   attr_accessor :list_of_trains
@@ -7,7 +6,7 @@ class Station
   NAME_FORMAT = /[a-z]|\d|\s/i.freeze
 
   def initialize(name)
-    @name = name
+    @name = name.capitalize
     @list_of_trains = []
     validate!
   end
@@ -29,12 +28,6 @@ class Station
       puts "You can't add the same train to station twice"
     end
   end
-
-#   def show_all_trains
-#     puts 'These trains are on the station now: '
-#     list_of_trains.each { |train| print " #{train.number}; " }
-#     puts "\n"
-#   end
 
   def setting_up_train(train)
     list_of_trains.delete(train)
