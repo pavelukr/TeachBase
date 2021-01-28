@@ -38,8 +38,8 @@ end
 
 def show_instruction_for_stop(string)
   puts '--------------------------------------------------------'
-  puts "If you want to continue #{string} input '+'.
-Otherwise the process will stop"
+  puts "If you want to stop #{string} input 'stop'.
+Otherwise the process will continue"
 end
 
 def add_station_to_array(array_of_stations)
@@ -51,7 +51,7 @@ def add_station_to_array(array_of_stations)
       puts 'You entered wrong name format for your station. Try again'
     end
     show_instruction_for_stop('creating stations')
-    break if gets.chomp != '+'
+    break if gets.chomp == 'stop'
   end
 end
 
@@ -108,7 +108,7 @@ def create_train(array_of_trains)
       puts 'You entered wrong number format for your train. Try again'
     end
     show_instruction_for_stop('creating trains')
-    break if gets.chomp != '+'
+    break if gets.chomp == 'stop'
   end
 end
 
@@ -183,8 +183,7 @@ def add_station_to_route(array_of_stations, route)
     end
     route.add_station(array_of_stations[gets.chomp.to_i])
     show_instruction_for_stop('adding stations to route')
-    enter_variable = gets.chomp
-    break if enter_variable != '+'
+    break if gets.chomp == 'stop'
   end
 end
 
@@ -233,8 +232,7 @@ def add_carriage_to_train(array_of_trains)
     end
     type_of_carriage_for_add(array_of_trains, train_position)
     show_instruction_for_stop('adding carriages to trains')
-    enter_variable = gets.chomp
-    break if enter_variable != '+'
+    break if gets.chomp == 'stop'
   end
 end
 
@@ -386,7 +384,7 @@ def all_cases(array_of_stations, array_of_trains, route, choice)
 end
 
 def enter_variable_for_user_input
-  show_instruction_for_stop('work with program')
+  show_instruction_for_stop('working with program')
   gets.chomp
 end
 
@@ -398,7 +396,7 @@ def user_input
     list_choice
     choice = gets.chomp
     all_cases(array_of_stations, array_of_trains, route, choice)
-    break if enter_variable_for_user_input != '+'
+    break if enter_variable_for_user_input == 'stop'
   end
 end
 
