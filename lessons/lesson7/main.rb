@@ -14,7 +14,8 @@ Input '4.' if you want to create train\n
 Input '5.' if you want to add wagon to train\n
 Input '6.' if you want to unhook wagon from train\n
 Input '7.' if you want to place train on the station\n
-Input '8.' if you want to see list of stations and list of trains on stations"
+Input '8.' if you want to take a seat or volume in carriage\n
+Input '9.' if you want to see list of stations and list of trains on stations"
 end
 
 def create_station
@@ -173,8 +174,8 @@ def add_station_to_route(array_of_stations, route)
   end
 end
 
-def get_train_position_for_add_wagon(array_of_train)
-  puts 'Select the train to which one you want to add wagon: '
+def get_train_position(array_of_train, &block)
+  block.call
   array_of_train.each do |value|
     puts "Input: #{array_of_train.find_index(value)}
  for train's number #{value.number} type: #{value.class}"
@@ -192,9 +193,15 @@ def input_volume
   gets.chomp
 end
 
+def show_instructions_type_of_carriage
+  puts "\n"
+  print "Input 'cargo' for carriage type cargo or"
+  print " 'pass' for carriage type passenger"
+  puts "\n"
+end
+
 def type_of_carriage_for_add(array_of_trains, train_position)
-  puts "Input 'cargo' for carriage type cargo or
-'pass' for carriage type passenger"
+  show_instructions_type_of_carriage
   case gets.chomp
   when 'cargo'
     array_of_trains[train_position].add_wagon(RailwayCarriageCargo.new(input_volume.to_f))
@@ -206,8 +213,13 @@ def type_of_carriage_for_add(array_of_trains, train_position)
 end
 
 def add_wagon_to_train(array_of_trains)
-  train_position = get_train_position_for_add_wagon(array_of_trains)
-  type_of_carriage_for_add(array_of_trains, train_position)
+  loop do
+    train_position = get_train_position(array_of_trains) { puts 'Select the train to which one you want to add wagon:' }
+    type_of_carriage_for_add(array_of_trains, train_position)
+    puts "If you want to continue adding carriages to trains input '+' otherwise entering will stop"
+    enter_variable = gets.chomp
+    break if enter_variable != '+'
+  end
 end
 
 def delete_wagon(arrays_of_train)
@@ -250,44 +262,81 @@ already on another station #{route.stations[station_position].name}"
   end
 end
 
-#Используя созданные в рамках задания методы, написать код,
-# который перебирает последовательно все станции
-# и для каждой станции выводит список поездов в формате:
-# - Номер поезда, тип, кол-во вагонов
-# А для каждого поезда на станции выводить список вагонов в формате:
-# - Номер вагона (можно назначать автоматически), тип вагона,
-# кол-во свободных и занятых мест (для пассажирского вагона)
-# или кол-во свободного и занятого объема (для грузовых вагонов).
+def inside_block_show_train(carriage, number, train)
+  puts "\n"
+  print "  Carriage by number #{number}, type #{train.class}"
+  if carriage.instance_of? PassengerRailwayCarriage
+    print " the number of free seats: #{carriage.free_seats},"
+    print "the number of taken seats: #{carriage.number_of_taken_seats}"
+  else
+    print " the left volume: #{carriage.left_volume},"
+    print "the occupied_volume: #{carriage.occupied_volume}"
+  end
+end
 
 def show_train_info(train)
   print ' and this train has: '
   number = 1
   train.show_carriage_info do |carriage|
-    puts " Carriage by number #{number}, type #{train.class}"
-    if carriage.instance_of? PassengerRailwayCarriage
-      print " the number of free seats: #{carriage.free_seats},
-the number of taken seats: #{carriage.number_of_taken_seats}"
-    else
-      print " the left volume: #{carriage.left_volume}
-the occupied_volume: #{carriage.occupied_volume}"
-    end
+    inside_block_show_train(carriage, number, train)
+    number += 1
   end
 end
 
 def show_station_info(station)
   station.show_trains do |train|
-    puts "Train number: #{train.number}, train type #{train.class},
-       number of railway carriages #{train.railway_carriages.length} #{show_train_info(train)}"
+    print "Train number: #{train.number}, train type #{train.class},"
+    print " number of railway carriages #{train.railway_carriages.length}"
+    show_train_info(train)
+    puts "\n"
   end
 end
 
 def show_stations(route)
-  puts 'You have list of stations on trains, placed on them: '
+  puts 'You have list of stations and trains, placed on them: '
   route.stations.each do |station|
     puts " On station #{station.name} you have these trains: "
     show_station_info(station)
+    puts "\n"
   end
   puts "\n"
+end
+
+def select_carriage_for_taking(train)
+  puts 'Firstly you should select carriage'
+  train.show_carriage_info do |carriage|
+    print " input #{train.railway_carriages.find_index(carriage)}"
+    print " for carriage  #{train.railway_carriages.find_index(carriage) + 1}"
+    puts "\n"
+  end
+  gets.chomp.to_i
+end
+
+def case_passenger_carriage(array_of_trains, train_position, carriage_position)
+  if array_of_trains[train_position].railway_carriages[carriage_position].free_seats.positive?
+    puts 'This is passenger train, so you can take a seat in selected carriage'
+    array_of_trains[train_position].railway_carriages[carriage_position].take_seat
+  else
+    puts "You can't take a seat, because all are taken already"
+  end
+end
+
+def case_cargo_carriage(array_of_trains, train_position, carriage_position)
+  puts 'This is cargo train, so you can take up volume in selected carriage'
+  puts "Input amount of volume, which you want to occupy,
+ but it should be less than #{array_of_trains[train_position].railway_carriages[carriage_position].left_volume}"
+  array_of_trains[train_position].railway_carriages[carriage_position].to_occupy_volume(gets.chomp.to_f)
+end
+
+def take_seat_or_volume(array_of_trains)
+  train_position = get_train_position(array_of_trains) { puts 'Select train, in which one you want to make changes' }
+  carriage_position = select_carriage_for_taking(array_of_trains[train_position])
+  class_of_carriage = array_of_trains[train_position].railway_carriages[carriage_position].class
+  if class_of_carriage == PassengerRailwayCarriage
+    case_passenger_carriage(array_of_trains, train_position, carriage_position)
+  else
+    case_cargo_carriage(array_of_trains, train_position, carriage_position)
+  end
 end
 
 def all_cases(array_of_stations, array_of_trains, route, choice)
@@ -307,6 +356,8 @@ def all_cases(array_of_stations, array_of_trains, route, choice)
   when '7'
     add_train_to_station(route, array_of_trains)
   when '8'
+    take_seat_or_volume(array_of_trains)
+  when '9'
     show_stations(route)
   else
     puts 'Sorry, but you missed a bit, try again'

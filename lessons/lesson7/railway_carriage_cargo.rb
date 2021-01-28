@@ -4,6 +4,7 @@ class RailwayCarriageCargo
   def initialize(overall_volume)
     self.overall_volume = overall_volume
     self.occupied_volume = 0.0
+    self.occupied_volume = 0.0
   end
 
   def to_occupy_volume(occupied_volume)
