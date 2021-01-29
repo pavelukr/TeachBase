@@ -4,6 +4,7 @@ require_relative 'cargo_train'
 require_relative 'passenger_train'
 require_relative 'railway_carriage_cargo'
 require_relative 'passenger_railway_carriage'
+require_relative 'accessors'
 
 def list_choice
   puts "You have to choose operation:\n
