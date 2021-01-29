@@ -1,9 +1,11 @@
 require_relative 'manufacturer'
 require_relative 'instance_counter'
+require_relative 'validation'
 
 class Train
   include Manufacturer
   include InstanceCounter
+  include Validation
 
   NUMBER_FORMAT = /[a-z]{3}|\d{3}-?([a-z]{2}|\d{2})/i.freeze
 
@@ -12,6 +14,8 @@ class Train
                 :route,
                 :railway_carriages
   attr_reader :number
+
+  validate :number, :format, /[a-z]{3}|\d{3}-?([a-z]{2}|\d{2})/i
 
   def initialize(number)
     @number = number
@@ -79,9 +83,9 @@ class Train
     end
   end
 
-  protected
+  # protected
 
-  def validate!
-    raise 'Incorrect format of your number. Try again' if number !~ NUMBER_FORMAT
-  end
+  # def validate!
+  # raise 'Incorrect format of your number. Try again' if number !~ NUMBER_FORMAT
+  # end
 end

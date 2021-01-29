@@ -401,4 +401,6 @@ def user_input
   end
 end
 
-user_input
+#user_input
+
+train1 = Train.new('11111')
