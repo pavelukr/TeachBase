@@ -15,7 +15,8 @@ class Train
                 :railway_carriages
   attr_reader :number
 
-  validate :number, :format, /[a-z]{3}|\d{3}-?([a-z]{2}|\d{2})/i
+  validate :format, :number, NUMBER_FORMAT
+  validate :presence, :number
 
   def initialize(number)
     @number = number
@@ -27,12 +28,6 @@ class Train
 
   def train_stop
     @speed = 0
-  end
-
-  def valid?
-    validate!
-  rescue RuntimeError
-    false
   end
 
   def delete_wagon

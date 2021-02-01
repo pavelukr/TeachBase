@@ -105,7 +105,7 @@ def create_train(array_of_trains)
     number = number_input
     begin
       check_for_existing_train(type_of_train(number), array_of_trains)
-    rescue RuntimeError
+    rescue StandardError
       puts 'You entered wrong number format for your train. Try again'
     end
     show_instruction_for_stop('creating trains')

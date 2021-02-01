@@ -1,19 +1,25 @@
+require_relative 'validation'
+
 class Station
+  include Validation
+
   attr_reader :name
 
   attr_accessor :list_of_trains
 
   NAME_FORMAT = /[a-z]|\d|\s/i.freeze
 
+  #validate :presence, :name
+
   def initialize(name)
     @name = name.capitalize
     @list_of_trains = []
-    validate!
+    #validate!
   end
 
   def valid?
     validate!
-  rescue RuntimeError
+  rescue StandardError
     false
   end
 
@@ -59,9 +65,9 @@ class Station
     "On the station you have #{cargo} type cargo of wagons and #{passenger} type passenger of wagons"
   end
 
-  protected
+  # protected
 
-  def validate!
-    raise 'Incorrect format of your station name. Try again' if name !~ NAME_FORMAT
-  end
+  # def validate!
+  # raise 'Incorrect format of your station name. Try again' if name !~ NAME_FORMAT
+  # end
 end
