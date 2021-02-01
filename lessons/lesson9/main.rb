@@ -402,5 +402,4 @@ def user_input
 end
 
 #user_input
-
-train1 = Train.new('11111')
+train = PassengerTrain.new('11111')

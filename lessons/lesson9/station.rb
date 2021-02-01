@@ -9,18 +9,13 @@ class Station
 
   NAME_FORMAT = /[a-z]|\d|\s/i.freeze
 
-  #validate :presence, :name
+  validate :name, :presence
+  validate :name, :type, String
 
   def initialize(name)
     @name = name.capitalize
     @list_of_trains = []
-    #validate!
-  end
-
-  def valid?
     validate!
-  rescue StandardError
-    false
   end
 
   def get_in_train(train)

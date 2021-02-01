@@ -7,7 +7,7 @@ class Train
   include InstanceCounter
   include Validation
 
-  NUMBER_FORMAT = /[a-z]{3}|\d{3}-?([a-z]{2}|\d{2})/i.freeze
+  NUMBER_FORMAT = /([a-z]{3}|\d{3})-?([a-z]{2}|\d{2})/i.freeze
 
   attr_accessor :speed,
                 :temporary_station,
@@ -15,15 +15,15 @@ class Train
                 :railway_carriages
   attr_reader :number
 
-  validate :format, :number, NUMBER_FORMAT
-  validate :presence, :number
+  validate :number, :format, NUMBER_FORMAT
+  validate :number, :presence
 
   def initialize(number)
     @number = number
     @railway_carriages = []
     @speed = 0
-    register_instance
     validate!
+    register_instance
   end
 
   def train_stop
@@ -77,10 +77,4 @@ class Train
       block.call(carriage)
     end
   end
-
-  # protected
-
-  # def validate!
-  # raise 'Incorrect format of your number. Try again' if number !~ NUMBER_FORMAT
-  # end
 end
