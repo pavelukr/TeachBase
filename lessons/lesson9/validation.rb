@@ -20,7 +20,6 @@ module Validation
 
   module InstantMethods
     def validate!
-      binding.pry
       self.class.list_of_validations.each do |validation|
         if validation[2].nil?
           send((validation[1]).to_s, validation[0])

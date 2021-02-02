@@ -2,6 +2,9 @@ require_relative 'train'
 require_relative 'passenger_railway_carriage'
 
 class PassengerTrain < Train
+  validate :number, :format, NUMBER_FORMAT
+  validate :number, :presence
+
   def add_wagon(railway_carriage)
     if railway_carriage.instance_of? PassengerRailwayCarriage
       railway_carriages << railway_carriage

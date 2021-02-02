@@ -15,9 +15,6 @@ class Train
                 :railway_carriages
   attr_reader :number
 
-  validate :number, :format, NUMBER_FORMAT
-  validate :number, :presence
-
   def initialize(number)
     @number = number
     @railway_carriages = []

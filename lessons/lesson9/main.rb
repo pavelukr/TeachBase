@@ -2,9 +2,11 @@ require_relative 'route'
 require_relative 'station'
 require_relative 'cargo_train'
 require_relative 'passenger_train'
+require_relative 'train'
 require_relative 'railway_carriage_cargo'
 require_relative 'passenger_railway_carriage'
 require_relative 'accessors'
+require_relative 'validation'
 
 def list_choice
   puts "You have to choose operation:\n
@@ -21,8 +23,8 @@ end
 
 def create_station
   puts 'Input name of the station'
-  name = gets.chomp
-  Station.new(name)
+    name = gets.chomp
+    Station.new(name)
 end
 
 def check_for_existing_station(station, array_of_stations)
@@ -48,7 +50,7 @@ def add_station_to_array(array_of_stations)
     begin
       check_for_existing_station(station = create_station, array_of_stations)
       puts "You created station by name #{station.name}"
-    rescue RuntimeError
+    rescue StandardError
       puts 'You entered wrong name format for your station. Try again'
     end
     show_instruction_for_stop('creating stations')
@@ -95,7 +97,7 @@ def check_for_existing_train(train, array_of_trains)
   checker = true
   array_of_trains.each do |value|
     checker = false if !train.nil? && !value.nil? &&
-                       (value.number == train.number)
+      (value.number == train.number)
   end
   if_for_check(train, checker, array_of_trains)
 end
@@ -401,5 +403,4 @@ def user_input
   end
 end
 
-#user_input
-train = PassengerTrain.new('11111')
+user_input
